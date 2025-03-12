@@ -1,16 +1,15 @@
 package org.example.homework001.model.Ticket;
 
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.example.homework001.model.Ticket.ApiReponse.Status;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Ticket {
-    private int id;
+public class TicketPost {
     private String passengerName;
     private String travelDate;
     private String sourceStation;
@@ -19,4 +18,9 @@ public class Ticket {
     private boolean paymentStatus;
     private Status statusTicket;
     private String seatNumber;
+
+
+
+//    private List<Ticket> tickets;
+
 }
