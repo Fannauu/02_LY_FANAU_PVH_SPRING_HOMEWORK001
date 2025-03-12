@@ -3,8 +3,9 @@ package org.example.homework001.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import org.example.homework001.model.Ticket.ApiReponse.ApiResponse;
 import org.example.homework001.model.Ticket.ApiReponse.Status;
+import org.example.homework001.model.Ticket.Entity.RequestTicketIDs;
 import org.example.homework001.model.Ticket.Ticket;
-import org.example.homework001.model.Ticket.TicketPost;
+import org.example.homework001.model.Ticket.RequestTicketPost;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class TicketController {
 
     AtomicInteger counter = new AtomicInteger(5);
     ArrayList<Ticket> tickets = new ArrayList<>();
-    ArrayList<TicketPost> ticketPosts = new ArrayList<>();
+    ArrayList<RequestTicketPost> ticketPosts = new ArrayList<>();
 
 
 
@@ -50,7 +51,7 @@ public class TicketController {
 
     @Operation(summary = "Create new ticket")
     @PostMapping("/tickets")
-    public ResponseEntity<ApiResponse<Ticket>> addTicket(@RequestBody TicketPost ticketPost){
+    public ResponseEntity<ApiResponse<Ticket>> addTicket(@RequestBody RequestTicketPost ticketPost){
         Ticket ticket = new Ticket(
                 counter.getAndIncrement(),
                 ticketPost.getTravelDate(),
@@ -114,7 +115,7 @@ public class TicketController {
 
     @Operation(summary = "Update an existing by ID")
     @PutMapping("{update-id}")
-    public ResponseEntity<ApiResponse<Ticket>> updateTicket(@PathVariable("update-id") Integer id, @RequestBody TicketPost ticketPost){
+    public ResponseEntity<ApiResponse<Ticket>> updateTicket(@PathVariable("update-id") Integer id, @RequestBody RequestTicketPost ticketPost){
         for(Ticket ticketPostUpdate : tickets){
             if(ticketPostUpdate.getId()==id){
                 ticketPostUpdate.setPassengerName((ticketPost.getPassengerName()));
@@ -188,9 +189,9 @@ public class TicketController {
 
     @Operation(summary = "Bulk Create tickets")
     @PostMapping("/bulk")
-    public ResponseEntity<ApiResponse<List<Ticket>>> addingManyTicket(@RequestBody List<TicketPost> ticketPost){
+    public ResponseEntity<ApiResponse<List<Ticket>>> addingManyTicket(@RequestBody List<RequestTicketPost> ticketPost){
         List<Ticket> ticket = new ArrayList<>();
-       for(TicketPost ticketPost1 : ticketPost){
+       for(RequestTicketPost ticketPost1 : ticketPost){
 //           Ticket ticket = new Ticket();
 //           tickets.setId(counter.getAndIncrement());
 //           ticket.setPassengerName((ticketPost1.getPassengerName()));
@@ -254,6 +255,34 @@ public class TicketController {
 //        List<Ticket> filterTickets = tickets.stream()
 //                .filter(ticket -> ticket.getStatusTicket().equals(status.name()))
 //        return ResponseEntity.status(HttpStatus.OK).body(null);
+    }
+
+
+    @Operation(summary = "Bulk update payment status for multiple tickets")
+    @PutMapping("/tickets")
+    public ResponseEntity<ApiResponse<List<Ticket>>> updatePaymentStatus(@RequestBody RequestTicketIDs ticketIDs){
+        List<Ticket> updateTickets = new ArrayList<>();
+        for(Integer ticketID : ticketIDs.getTicketIDs()){
+            System.out.println(ticketID);
+            for(Ticket ticket : tickets){
+                if(ticket.getId()==ticketID){
+                    ticket.setPaymentStatus(ticketIDs.isPaymentStatus());
+                    System.out.println("Update: "+ticket);
+                    updateTickets.add(ticket);
+                    break;
+                }
+            }
+
+        }
+        ApiResponse<List<Ticket>> response = new ApiResponse<>(
+                true,
+                "Updated successfully",
+                HttpStatus.FOUND,
+                updateTickets,
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
 

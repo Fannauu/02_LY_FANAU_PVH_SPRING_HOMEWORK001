@@ -3,13 +3,10 @@ package org.example.homework001.model.Ticket;
 import lombok.*;
 import org.example.homework001.model.Ticket.ApiReponse.Status;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TicketPost {
+public class RequestTicketPost {
     private String passengerName;
     private String travelDate;
     private String sourceStation;
