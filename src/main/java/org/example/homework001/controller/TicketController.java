@@ -114,8 +114,8 @@ public class TicketController {
 
 
     @Operation(summary = "Update an existing by ID")
-    @PutMapping("{update-id}")
-    public ResponseEntity<ApiResponse<Ticket>> updateTicket(@PathVariable("update-id") Integer id, @RequestBody RequestTicketPost ticketPost){
+    @PutMapping("{ticket-id}")
+    public ResponseEntity<ApiResponse<Ticket>> updateTicket(@PathVariable("ticket-id") Integer id, @RequestBody RequestTicketPost ticketPost){
         for(Ticket ticketPostUpdate : tickets){
             if(ticketPostUpdate.getId()==id){
                 ticketPostUpdate.setPassengerName((ticketPost.getPassengerName()));
